@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="text/javascript" src="js/vue-2.4.0.js" ></script>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-3.3.7.css"/>
+	<title>Document</title>
+	<style>
+		
+	</style>
+</head>
+<body>
+	
+	<div id="app">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">添加品牌</h3>
+			</div>
+			<div class="panel-body form-inline">
+				<label>商品名称：<input type="text" class="form-control" v-model="name"></label>
+				<label>商品价格：<input type="text" class="form-control" v-model="money"></label>
+				<button class="btn btn-primary" @click="append()">添加</button>
+			</div>
+		</div>
+		<table class="table table-bordered table-hover table-striped">
+			<thead>
+				<tr>
+					<th></th>
+					<th>商品名称</th>
+					<th>商品单价</th>
+					<th>商品个数</th>
+					<th>商品价格</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="(item,index) in list" :key="index">
+					<th><input type="checkbox" v-model="arr" :value="item.id" @click="onlicheck()"></th>
+					<td>{{item.name}}</td>
+					<td>{{item.money}}</td>
+					<td><button @click="add(index)">+</button><input type="text" v-model="item.val" @keyup="change()"><button @click="del(index)">-</button></td>
+					<td>{{item.moneys}}</td>
+					<td><button @click="rem(index)">删除</button></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td>总价<span>{{change}}</span></td>
+					<td><input type="checkbox" v-model="allcheck" @click="check()">全选</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</body>
+<script>
+	var vm=new Vue({
+		el:"#app",
+		data:{
+			name:"",
+			money:"",
+			allmoney:0,
+			allcheck:false,
+			arr:[],
+			list:[
+				{id:1,name:"vue教程1",money:12,val:0,moneys:0},
+				{id:2,name:"vue教程2",money:15,val:0,moneys:0},
+				{id:3,name:"vue教程3",money:12,val:0,moneys:0},
+				{id:4,name:"vue教程4",money:15,val:0,moneys:0},
+				{id:5,name:"vue教程5",money:12,val:0,moneys:0},
+				{id:6,name:"vue教程6",money:15,val:0,moneys:0},
+				{id:7,name:"vue教程7",money:12,val:0,moneys:0},
+				{id:8,name:"vue教程8",money:15,val:0,moneys:0},
+				{id:9,name:"vue教程9",money:12,val:0,moneys:0},
+				{id:10,name:"vue教程10",money:15,val:0,moneys:0},
+				{id:11,name:"vue教程11",money:12,val:0,moneys:0},
+				{id:12,name:"vue教程22",money:15,val:0,moneys:0},
+			]
+		},methods:{
+			add(index){
+				this.list[index].val++;
+				this.list[index].moneys=this.list[index].money*this.list[index].val;
+			},
+			del(index){
+				this.list[index].val--;
+				this.list[index].moneys=this.list[index].money*this.list[index].val;
+			},
+			
+			rem(index){
+				
+				if(this.arr.indexOf(this.list[index].id)!=-1){
+					console.log(this.list[index].id)
+					this.arr.splice(this.arr.indexOf(this.list[index].id),1)
+				}
+				this.list.splice(index,1);
+				if(this.list.length==0){
+					this.allcheck=false;
+				}
+			},
+			append(){
+				var car={name:this.name,money:this.money,val:0};
+				this.list.push(car);
+				this.money=this.name="";
+			},
+			check(){
+				if(this.allcheck==false){
+					this.arr=[];
+				}else{
+					this.arr=[];
+					for(let i=0;i<this.list.length;i++){
+						this.arr.push(this.list[i].id);
+					}
+				}
+			},
+			onlicheck(){
+				if(this.arr.length==this.list.length){
+					this.allcheck=true;
+				}else{
+					this.allcheck=false;
+				}
+			}
+		},
+		computed:{
+			change(){
+				var all=0;
+				for(let i=0;i<this.list.length;i++){
+					this.list[i].moneys=this.list[i].money*this.list[i].val;
+					if(this.arr.indexOf(this.list[i].id)!=-1){
+						all+=this.list[i].moneys
+					}
+				}
+				return all;
+			},
+		}
+	})
+</script>
+</html>
